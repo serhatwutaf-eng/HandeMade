@@ -12,20 +12,21 @@ module.exports=async function handler(req,res){
   const forbidden=[...new Set([...allergenTerms,...dislikes].map(x=>x.toLocaleLowerCase('tr-TR').trim()).filter(Boolean))];
 
   const cuisineRule=cuisine==='tümü'
-    ?'Dünya mutfaklarını geniş biçimde araştır ve en uygun mutfağı seç.'
+    ?'Dünya mutfaklarını geniş biçimde araştır. Tek bir popüler tarife saplanma; farklı ülkelerden ve yemek ailelerinden birden çok aday değerlendir.'
     :cuisine==='rastgele'
-      ?'Her istekte farklı bir dünya mutfağı seçmeye çalış; seçtiğin mutfağın gerçek bir yemeğini araştır.'
-      :`Öncelikle ${cuisine} mutfağını web aramasıyla araştır. Profil filtreleriyle uyumlu gerçek bir tarif bulabiliyorsan o mutfağın tarifini seç. Uygun geleneksel seçenek yoksa bu mutfaktan esinlenen güvenli bir HandeMade tarifi üret.`;
+      ?'Her istekte mümkün olduğunca farklı bir dünya mutfağı seç; seçtiğin mutfağın gerçek yemeklerinden geniş bir aday havuzu araştır.'
+      :`Öncelikle ${cuisine} mutfağını web aramasıyla geniş biçimde araştır. Bu mutfakta yalnızca birkaç popüler tarife bakma; farklı bölgelerden ve yemek ailelerinden en az 8 farklı gerçek yemek adayını zihninde değerlendir. Profil filtreleriyle çakışan adayları ele. Güvenli gerçek bir tarif bulabiliyorsan onu seç. Uygun geleneksel seçenek kalmazsa bu mutfaktan esinlenen güvenli bir HandeMade tarifi üret.`;
 
   const retryRule=avoidRecipe
-    ?`Kullanıcı aynı seçimlerle yeniden deniyor. Önceki tarif "${avoidRecipe}" idi. Bu tarifi veya belirgin biçimde aynı tarifin küçük varyasyonunu tekrar verme; farklı bir yemek seç.`
+    ?`Kullanıcı aynı seçimlerle yeniden deniyor. Önceki tarif "${avoidRecipe}" idi. Bu tarifi veya belirgin biçimde aynı tarifin küçük varyasyonunu tekrar verme; aday havuzunda başka yemek ailelerine yönel.`
     :'';
 
   const instructions=`Sen HandeMade adlı tarif uygulamasının tarif motorusun. Kullanıcıya Türkçe cevap ver.
-ÖNCELİK SIRASI: 1) alerjen güvenliği, 2) sevmediği yiyecekleri dışlama, 3) kullanıcının mutfak tercihi, 4) lezzet ve uygulanabilirlik.
+ÖNCELİK SIRASI: 1) alerjen güvenliği, 2) sevmediği yiyecekleri dışlama, 3) kullanıcının mutfak tercihi, 4) çeşitlilik, 5) lezzet ve uygulanabilirlik.
 ${cuisineRule}
 ${retryRule}
-Her istekte web_search aracını kullan. Geleneksel bir tarif seçiyorsan kaynak mutfağa sadık kal ama yasaklı içerikleri asla gizleme veya isteğe bağlı olarak bile önerme. Güvenli biçimde uyarlanamıyorsa o yemeği seçme ve başka bir tarif ara.
+Her istekte web_search aracını kullan. Seçilen mutfak için mümkün olduğunda birden çok güvenilir kaynak ve farklı yemek adları üzerinden geniş arama yap. İlk bulduğun uygun tarifi hemen seçme. Önce farklı adayları karşılaştır, yasaklı içeriklerle çakışanları ele, sonra en iyi adayı seç.
+Geleneksel bir tarif seçiyorsan kaynak mutfağa sadık kal ama yasaklı içerikleri asla gizleme veya isteğe bağlı olarak bile önerme. Güvenli biçimde uyarlanamıyorsa o yemeği seçme ve başka bir tarif ara.
 Yasaklı terimleri tarif adı, malzeme, sos, garnitür, alternatif, hazırlama adımı veya 'isteğe bağlı' öneride KULLANMA. Bir alerjeni ikame ederken de başka yasaklı terim kullanma. Paketli ürünlerde kesin güvenlik iddiasında bulunma.
 MALZEME ÖLÇÜLERİ ZORUNLU: ingredients dizisindeki HER satır miktarla başlamalı. Türk ev tipi ölçülerini tercih et: su bardağı, yemek kaşığı, tatlı kaşığı, çay kaşığı, adet, diş, demet, dilim. Gerektiğinde g veya ml kullan. Örnek: "1 su bardağı pirinç", "2 yemek kaşığı zeytinyağı", "1/2 çay kaşığı tuz", "2 orta boy domates". Sadece "pirinç" veya "zeytinyağı" gibi miktarsız satır döndürme. Miktarlar servings alanındaki porsiyon sayısıyla uyumlu olsun.
 Hazırlanış kısmı kısa özet olmasın. 5 ila 9 ayrı adım üret. Her adım uygulanabilir ve yeterince ayrıntılı olsun; gerektiğinde yaklaşık dakika, ateş/ısı derecesi, kıvam, renk veya pişme işareti belirt. Adımlarda malzeme listesinde olmayan yeni ana malzeme ekleme.
@@ -58,16 +59,16 @@ sourceType yalnızca "world" veya "original" olsun. world ise cuisine gerçek mu
       body:JSON.stringify({
         model:'gpt-6-luna',
         instructions,
-        tools:[{type:'web_search',search_context_size:'low'}],
+        tools:[{type:'web_search',search_context_size:'medium'}],
         input:`Kategori: ${type}
 Mutfak tercihi: ${cuisine}
 Alerjenler: ${allergens.join(', ')||'yok'}
 Kesinlikle yasaklı terimler: ${forbidden.join(', ')||'yok'}
 Sevmedikleri: ${dislikes.join(', ')||'yok'}
 Kaçınılacak önceki tarif: ${avoidRecipe||'yok'}
-Bir adet uygulanabilir, miktarları net ve ayrıntılı tarif döndür.`,
+Geniş bir aday havuzu taradıktan sonra bir adet uygulanabilir, miktarları net ve ayrıntılı tarif döndür.`,
         text:{format:{type:'json_schema',name:'handemade_recipe',strict:true,schema}},
-        max_output_tokens:2400
+        max_output_tokens:2600
       })
     });
 
