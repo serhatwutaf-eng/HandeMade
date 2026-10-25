@@ -1,7 +1,7 @@
 {
   "name": "HandeMade: Made for Hande",
   "short_name": "HandeMade",
-  "start_url": "./?v=0.33",
+  "start_url": "./?v=0.34",
   "display": "standalone",
   "background_color": "#f7f3ec",
   "theme_color": "#47705c",
