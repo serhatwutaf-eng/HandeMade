@@ -1,7 +1,5 @@
 /* HandeMade v0.22 — Türk mutfağı aramasını genişlet, karabiber filtresini düzelt, Nefis web kaynağını ekle */
 
-// "karabiber" artık generic "pepper" kelimesini yasaklamaz.
-// Böylece kırmızı biber, yeşil biber, dolmalık biber ve acı biberli tarifler yanlışlıkla elenmez.
 HM_FORBIDDEN_EN['karabiber']=[
   'black pepper',
   'ground black pepper',
@@ -21,7 +19,6 @@ function hmContainsForbiddenEnglish(text,term){
   return hay.includes(needle);
 }
 
-// Malzeme kontrolünü satır bazında yap. Generic alt dize eşleşmeleri yüzünden masum biber türlerini eleme.
 hmRemoteUnsafe=function(meal,terms){
   const ingredientTexts=hmMealIngredients(meal).map(x=>x.ingredient);
   const meta=[meal.strMeal,meal.strCategory,meal.strArea];
@@ -31,10 +28,8 @@ hmRemoteUnsafe=function(meal,terms){
   });
 };
 
-// Türk mutfağında doğrudan doğru ülke alanını tara.
 HM_AREA_MAP['türk']=['Turkey'];
 
-// Türk mutfağı için ağır/kararsız kaynaklardan önce iki güvenilir kaynağı dene.
 const hmFindWorldRecipeV021=hmFindWorldRecipe;
 hmFindWorldRecipe=async function(previousName=''){
   if(!navigator.onLine)return null;
@@ -46,8 +41,10 @@ hmFindWorldRecipe=async function(previousName=''){
     const archive=await hmFindOttomanRecipe(previousName);
     if(archive)return archive;
 
-    // Son çare olarak mevcut geniş zinciri dene.
-    return hmFindWorldRecipeV021(previousName);
+    // Türkçe mutfakta son ücretsiz kaynak olarak Textual Chef dizinini dene.
+    const textual=await hmFindTextualRecipe(previousName);
+    if(textual)return textual;
+    return null;
   }
 
   return hmFindWorldRecipeV021(previousName);
@@ -81,11 +78,9 @@ function hmEnsureExternalSearchCard(){
 const hmRenderV022=window.renderRecipe;
 window.renderRecipe=function(){
   hmRenderV022();
-  // Tarif bulunduğunda da web seçenekleri görünür kalsın. Böylece yerel tek tarif döngüsüne sıkışılmaz.
   setTimeout(hmEnsureExternalSearchCard,0);
 };
 
-// Sonuç bulunamadığında yalnızca otomatik popup'a güvenme; iki gerçek bağlantıyı da göster.
 hmOpenBrowserSearch=function(){
   const target=document.getElementById('recipe');
   if(!target)return;
