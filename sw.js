@@ -1,5 +1,5 @@
-const CACHE='handemade-v0101-r2';
-const ASSETS=['./','./index.html','./app.css','./app.js','./cuisine.js','./manifest.webmanifest','./handemade-logo.webp','./handemade-bg.webp','./apple-touch-icon.png'];
+const CACHE='handemade-v011';
+const ASSETS=['./','./index.html','./app.css','./app.js','./cuisine.js','./v011.js','./manifest.webmanifest','./handemade-logo.webp','./handemade-bg.webp','./apple-touch-icon.png'];
 
 self.addEventListener('install',e=>{
   self.skipWaiting();
