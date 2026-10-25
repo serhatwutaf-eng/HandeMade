@@ -1,7 +1,5 @@
 /* HandeMade v0.21 — Türk mutfağı kapsamını genişlet ve web fallback'i sağlamlaştır */
 
-// TheMealDB Türk mutfağını "Turkey" alanıyla döndürüyor.
-// Eski "Turkish" değeri korunuyor ama doğru değer öne alınıyor.
 HM_AREA_MAP['türk']=['Turkey','Turkish'];
 
 let hmOttomanArchiveCache=null;
@@ -72,10 +70,8 @@ async function hmFindOttomanRecipe(previousName=''){
 const hmFindWorldRecipeV020=hmFindWorldRecipe;
 hmFindWorldRecipe=async function(previousName=''){
   if(!navigator.onLine)return null;
-  // Önce mevcut canlı kaynakları tara. TheMealDB artık doğru Turkey alanını kullanıyor.
   const normal=await hmFindWorldRecipeV020(previousName);
   if(normal)return normal;
-  // Türk mutfağında sonuç kalmazsa 442 tariflik açık koleksiyona geç.
   const archive=await hmFindOttomanRecipe(previousName);
   if(archive)return archive;
   return null;
@@ -89,7 +85,6 @@ function hmWebSearchCard(){
   target.innerHTML=`<div class="card"><h2>Web'de daha geniş ara</h2><p>Uygulama içindeki kaynaklarda uygun tarif bulunamadı. Arama HandeMade'i kapatmadan ayrı bir tarayıcı sekmesinde açılır.</p><a class="primary" style="display:block;text-align:center;text-decoration:none" href="${url}" target="_blank" rel="noopener noreferrer">🌐 Tarayıcıda ara</a><button class="secondary" style="margin-top:10px" onclick="go('home')">HandeMade'de kal</button><div class="warn" style="margin-top:12px"><strong>Not:</strong> Web sonuçları HandeMade'in güvenlik filtresinden geçmez. Alerjen ve içerik kontrolünü tarif sayfasında ayrıca yap.</div></div>`;
 }
 
-// iOS/PWA otomatik popup'ları engelleyebildiği için güvenilir tıklanabilir bağlantıyı daima bırak.
 hmOpenBrowserSearch=function(){
   if(!navigator.onLine){
     const target=document.getElementById('recipe');
@@ -101,3 +96,12 @@ hmOpenBrowserSearch=function(){
 
 const v021Version=document.querySelector('.brand>.mini');
 if(v021Version)v021Version.textContent='beta • v0.21';
+
+// v0.22 düzeltme katmanını eski HTML sürümlerinde de yükle.
+(function(){
+  if(document.querySelector('script[data-hm-v022]'))return;
+  const s=document.createElement('script');
+  s.src='v022.js?v=0.22';
+  s.dataset.hmV022='1';
+  document.head.appendChild(s);
+})();
