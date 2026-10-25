@@ -6,20 +6,20 @@
   <meta name="theme-color" content="#47705c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="HandeMade">
-  <link rel="manifest" href="manifest.webmanifest?v=0.23">
+  <link rel="manifest" href="manifest.webmanifest?v=0.30">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="app.css?v=0.23">
+  <link rel="stylesheet" href="app.css?v=0.30">
   <title>HandeMade: Made for Hande</title>
 </head>
 <body>
 <div class="app">
   <div class="brand">
     <div class="brandmark"><img class="logo" src="handemade-logo.webp" alt="HandeMade logo"><div><div class="brandtitle">HandeMade</div><div class="brandsub">Made for Hande</div></div></div>
-    <div class="mini">beta • v0.23</div>
+    <div class="mini">beta • v0.30</div>
   </div>
 
   <section id="onboarding">
-    <div class="card hero"><div class="tag">Dünya mutfağı, senin kuralların.</div><h1>İki şeyi söyle, gerisini HandeMade düşünsün. 🌍🍲</h1><p>Alerjenlerini ve sevmediğin yiyecekleri kaydet. HandeMade bunları dışarıda tutarak dünya mutfaklarından fikir bulsun veya sana özel yeni bir tarif oluştursun.</p><button class="primary" onclick="startProfile()">Profilimi oluştur</button></div>
+    <div class="card hero"><div class="tag">Dünya mutfağı, senin kuralların.</div><h1>İki şeyi söyle, gerisini HandeMade düşünsün. 🌍🍲</h1><p>Alerjenlerini ve sevmediğin yiyecekleri kaydet. HandeMade bunları dışarıda tutarak büyük açık tarif arşivlerinde arama yapsın.</p><button class="primary" onclick="startProfile()">Profilimi oluştur</button></div>
     <div class="warn"><strong>Güvenlik:</strong> Ciddi alerjilerde ürün etiketlerini ve çapraz bulaşma uyarılarını ayrıca kontrol et.</div>
   </section>
 
@@ -30,7 +30,7 @@
   </section>
 
   <section id="home" class="hidden">
-    <div class="card hero"><div class="tag">Bugün dünyada nereye gidelim?</div><h1>Bir kategori seç. Gerisini ben kurcalayayım. ✨</h1><p>Alerjenlerin ve sevmediklerin otomatik filtrelenir.</p><div class="statusline"><span id="aiBadge" class="badge live">Geniş ücretsiz tarama</span><span id="aiStatus" class="mini">TheMealDB Türk koleksiyonu + açık Türk arşivi + web/Nefis araması</span></div></div>
+    <div class="card hero"><div class="tag">Bugün dünyada nereye gidelim?</div><h1>Bir kategori seç. Büyük havuzu tarayalım. 🌍</h1><p>Alerjenlerin ve sevmediklerin kaynak metinde ve Türkçe sonuçta kontrol edilir.</p><div class="statusline"><span id="aiBadge" class="badge live">128 bin+ kaynak kaydı</span><span id="aiStatus" class="mini">54.843 açık arşiv + 73 binlik JSON katalog + TheMealDB</span></div></div>
 
     <div class="card">
       <h3>Ne hazırlamak istiyorsun?</h3>
@@ -46,10 +46,10 @@
     </div>
 
     <div class="card">
-      <h3>Daha geniş ara</h3>
-      <p class="mini">İstersen aynı mutfak ve aktif filtrelerle doğrudan web veya Nefis Yemek Tarifleri araması aç.</p>
-      <a id="hmHomeWebSearch" class="secondary" style="display:block;text-align:center;text-decoration:none" href="https://www.google.com" target="_blank" rel="noopener noreferrer" onclick="return hmPrepareExternalLink(this,'web')">🌐 Web'de ara</a>
-      <a id="hmHomeNefisSearch" class="secondary" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="https://www.google.com" target="_blank" rel="noopener noreferrer" onclick="return hmPrepareExternalLink(this,'nefisyemek')">🍲 Nefis Yemek Tarifleri'nde ara</a>
+      <h3>Dış kaynakta ara</h3>
+      <p class="mini">Aynı mutfak, kategori, alerjen ve sevmediğin malzemelerle doğrudan dış kaynağı aç.</p>
+      <a id="hmHomeNefisSearch" class="secondary" style="display:block;text-align:center;text-decoration:none" href="https://www.nefisyemektarifleri.com/" target="_blank" rel="noopener noreferrer" onclick="return hmPrepareExternalLink(this,'nefisyemek')">🍲 Nefis Yemek Tarifleri’nde ara</a>
+      <a id="hmHomeWebSearch" class="secondary" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="https://www.google.com" target="_blank" rel="noopener noreferrer" onclick="return hmPrepareExternalLink(this,'web')">🔎 Google’da ara</a>
     </div>
 
     <div class="card"><div class="section"><h3 style="margin:0">Aktif filtreler</h3><button class="iconbtn" onclick="go('profile')">Düzenle</button></div><div id="profileSummary" class="chips" style="margin-top:10px"></div></div>
@@ -63,19 +63,15 @@
 <nav id="nav" class="nav hidden"><button data-nav="home" class="active" onclick="go('home')"><b>⌂</b>Ana Sayfa</button><button data-nav="recipe" onclick="go('recipe')"><b>🍽</b>Tarif</button><button data-nav="favorites" onclick="go('favorites')"><b>♡</b>Favoriler</button><button data-nav="profile" onclick="go('profile')"><b>👤</b>Profil</button></nav>
 <div id="toast" class="toast">Kaydedildi</div>
 
-<script src="app.js?v=0.23"></script>
-<script src="cuisine.js?v=0.23"></script>
-<script src="v011.js?v=0.23"></script>
-<script src="v012.js?v=0.23"></script>
-<script src="v013.js?v=0.23"></script>
-<script src="v014.js?v=0.23"></script>
-<script src="v015.js?v=0.23"></script>
-<script src="v016.js?v=0.23"></script>
-<script src="v017.js?v=0.23"></script>
-<script src="v018.js?v=0.23"></script>
-<script src="v020.js?v=0.23"></script>
-<script src="v021.js?v=0.23"></script>
-<script src="v022.js?v=0.23"></script>
-<script src="v023.js?v=0.23"></script>
+<script src="app.js?v=0.30"></script>
+<script src="cuisine.js?v=0.30"></script>
+<script src="v011.js?v=0.30"></script>
+<script src="v012.js?v=0.30"></script>
+<script src="v013.js?v=0.30"></script>
+<script src="v014.js?v=0.30"></script>
+<script src="v015.js?v=0.30"></script>
+<script src="v016.js?v=0.30"></script>
+<script src="v017.js?v=0.30"></script>
+<script src="engine-v030.js?v=0.30"></script>
 </body>
 </html>
