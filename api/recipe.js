@@ -27,6 +27,7 @@ ${cuisineRule}
 ${retryRule}
 Her istekte web_search aracını kullan. Geleneksel bir tarif seçiyorsan kaynak mutfağa sadık kal ama yasaklı içerikleri asla gizleme veya isteğe bağlı olarak bile önerme. Güvenli biçimde uyarlanamıyorsa o yemeği seçme ve başka bir tarif ara.
 Yasaklı terimleri tarif adı, malzeme, sos, garnitür, alternatif, hazırlama adımı veya 'isteğe bağlı' öneride KULLANMA. Bir alerjeni ikame ederken de başka yasaklı terim kullanma. Paketli ürünlerde kesin güvenlik iddiasında bulunma.
+MALZEME ÖLÇÜLERİ ZORUNLU: ingredients dizisindeki HER satır miktarla başlamalı. Türk ev tipi ölçülerini tercih et: su bardağı, yemek kaşığı, tatlı kaşığı, çay kaşığı, adet, diş, demet, dilim. Gerektiğinde g veya ml kullan. Örnek: "1 su bardağı pirinç", "2 yemek kaşığı zeytinyağı", "1/2 çay kaşığı tuz", "2 orta boy domates". Sadece "pirinç" veya "zeytinyağı" gibi miktarsız satır döndürme. Miktarlar servings alanındaki porsiyon sayısıyla uyumlu olsun.
 Hazırlanış kısmı kısa özet olmasın. 5 ila 9 ayrı adım üret. Her adım uygulanabilir ve yeterince ayrıntılı olsun; gerektiğinde yaklaşık dakika, ateş/ısı derecesi, kıvam, renk veya pişme işareti belirt. Adımlarda malzeme listesinde olmayan yeni ana malzeme ekleme.
 sourceType yalnızca "world" veya "original" olsun. world ise cuisine gerçek mutfak/bölgeyi, inspiration kısa köken bilgisini anlatsın. original ise cuisine "HandeMade" ve inspiration hangi mutfaktan esinlendiğini anlatsın.`;
 
@@ -64,9 +65,9 @@ Alerjenler: ${allergens.join(', ')||'yok'}
 Kesinlikle yasaklı terimler: ${forbidden.join(', ')||'yok'}
 Sevmedikleri: ${dislikes.join(', ')||'yok'}
 Kaçınılacak önceki tarif: ${avoidRecipe||'yok'}
-Bir adet uygulanabilir ve ayrıntılı tarif döndür.`,
+Bir adet uygulanabilir, miktarları net ve ayrıntılı tarif döndür.`,
         text:{format:{type:'json_schema',name:'handemade_recipe',strict:true,schema}},
-        max_output_tokens:2200
+        max_output_tokens:2400
       })
     });
 
@@ -80,6 +81,9 @@ Bir adet uygulanabilir ve ayrıntılı tarif döndür.`,
     const haystack=[recipe.name,recipe.cuisine,recipe.inspiration,...(recipe.ingredients||[]),...(recipe.steps||[])].join(' | ').toLocaleLowerCase('tr-TR');
     const hit=forbidden.find(term=>haystack.includes(term));
     if(hit)return res.status(422).json({error:`Safety filter blocked forbidden term: ${hit}`});
+
+    const unmeasured=(recipe.ingredients||[]).find(item=>!/^\s*\d/.test(String(item)));
+    if(unmeasured)return res.status(422).json({error:`Ingredient measurement missing: ${unmeasured}`});
 
     if(avoidRecipe && recipe.name && recipe.name.toLocaleLowerCase('tr-TR').trim()===avoidRecipe.toLocaleLowerCase('tr-TR').trim()){
       return res.status(409).json({error:'Repeated recipe blocked'});
