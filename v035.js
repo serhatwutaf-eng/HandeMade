@@ -138,7 +138,6 @@ hm33FoodToRecipe=async function(candidate,poolCount){
   return recipe;
 };
 
-// Dünya aramasında doğrudan örneklem yetersiz kalırsa arama indeksini de birleştir.
 async function hm35WorldPool(filter,previousName=''){
   let a={items:[],available:0,scanned:0},b={items:[],available:0,scanned:0};
   try{a=await hm34DirectWorldCandidates(filter,previousName)}catch(e){}
@@ -184,4 +183,14 @@ window.generateRecipe=async function(retry=false){
   const v=document.querySelector('.brand>.mini');if(v)v.textContent='beta • v0.35';
   const status=document.getElementById('aiStatus');
   if(status)status.textContent='Türk: 174.975 doğrudan Türkçe • Diğer mutfaklar: 231.637 mega havuz + çoklu Türkçeleştirme yolu';
+})();
+
+// v0.36 statik Türkçe dünya katalog motoru, eski HTML cache'ten gelse bile yüklenir.
+(function hmLoadV036(){
+  if(document.querySelector('script[data-hm-v036]'))return;
+  const s=document.createElement('script');
+  s.src='v036.js?v=0.36';
+  s.async=false;
+  s.dataset.hmV036='1';
+  document.head.appendChild(s);
 })();
