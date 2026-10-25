@@ -1,6 +1,6 @@
 /* HandeMade v0.21 — Türk mutfağı kapsamını genişlet ve web fallback'i sağlamlaştır */
 
-HM_AREA_MAP['türk']=['Turkey','Turkish'];
+HM_AREA_MAP['türk']=['Turkish'];
 
 let hmOttomanArchiveCache=null;
 
@@ -42,7 +42,7 @@ async function hmFindOttomanRecipe(previousName=''){
   if(!archive.length)return null;
 
   const pool=hmShuffle(archive.filter(hmArchiveTypeOk).filter(x=>!previousName||n(x.title)!==n(previousName)));
-  for(const entry of pool.slice(0,80)){
+  for(const entry of pool.slice(0,120)){
     const source=String(entry.body||'');
     if(!source)continue;
     const hay=(String(entry.title||'')+' | '+source).toLowerCase();
@@ -96,12 +96,3 @@ hmOpenBrowserSearch=function(){
 
 const v021Version=document.querySelector('.brand>.mini');
 if(v021Version)v021Version.textContent='beta • v0.21';
-
-// v0.22 düzeltme katmanını eski HTML sürümlerinde de yükle.
-(function(){
-  if(document.querySelector('script[data-hm-v022]'))return;
-  const s=document.createElement('script');
-  s.src='v022.js?v=0.22';
-  s.dataset.hmV022='1';
-  document.head.appendChild(s);
-})();
