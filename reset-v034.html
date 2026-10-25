@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HandeMade v0.34 yenileniyor</title></head>
+<body style="font-family:system-ui;padding:28px;background:#f7f3ec;color:#26352d"><h2>HandeMade v0.34 yenileniyor…</h2><p>Eski uygulama önbelleği temizleniyor.</p><script>
+(async()=>{
+  try{
+    if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(r=>r.unregister()));}
+    if('caches' in window){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}
+  }catch(e){}
+  location.replace('./?v=0.34&fresh='+Date.now());
+})();
+</script></body></html>
