@@ -1,4 +1,4 @@
-/* HandeMade v0.18 — canlı kaynaklar sonuç vermezse tarayıcı aramasına geç */
+/* HandeMade v0.19 — canlı kaynaklar sonuç vermezse web aramasını yeni sekmede aç */
 
 function hmBrowserSearchQuery(){
   const parts=[];
@@ -20,7 +20,6 @@ function hmBrowserSearchQuery(){
   parts.push(typeLabel,'tarifi');
 
   // Sağlık verisi olan alerjenleri arama motoruna göndermiyoruz.
-  // Yalnızca kullanıcının sevmediği yiyecekler arama sorgusuna eklenir.
   const dislikes=(Array.isArray(S.dislikes)?S.dislikes:[])
     .map(x=>String(x||'').trim())
     .filter(Boolean)
@@ -29,6 +28,16 @@ function hmBrowserSearchQuery(){
 
   parts.push('malzemeler','hazırlanışı');
   return parts.join(' ');
+}
+
+function hmBrowserSearchUrl(){
+  return 'https://www.google.com/search?q='+encodeURIComponent(hmBrowserSearchQuery());
+}
+
+function hmLaunchBrowserSearch(){
+  const url=hmBrowserSearchUrl();
+  const opened=window.open(url,'_blank','noopener,noreferrer');
+  return !!opened;
 }
 
 function hmOpenBrowserSearch(){
@@ -40,15 +49,16 @@ function hmOpenBrowserSearch(){
     return;
   }
 
-  const q=hmBrowserSearchQuery();
   const target=document.getElementById('recipe');
   if(target){
-    target.innerHTML='<div class="card loading"><div class="spinner"></div><strong>Web\'de daha geniş aranıyor…</strong><p>Canlı tarif kaynaklarında uygun sonuç bulunamadı. Tarayıcıda daha geniş bir arama açılıyor. Alerjen bilgilerin arama motoruna gönderilmiyor.</p></div>';
+    target.innerHTML='<div class="card"><h2>Web\'de daha geniş arama</h2><p>Canlı tarif kaynaklarında uygun sonuç bulunamadı. Arama yeni bir tarayıcı sekmesinde açılacak; HandeMade burada açık kalacak. Alerjen bilgilerin arama motoruna gönderilmiyor.</p><button class="primary" id="hmBrowserSearchBtn">🌐 Tarayıcıda ara</button><button class="secondary" style="margin-top:10px" onclick="go(\'home\')">HandeMade\'de kal</button></div>';
+    const btn=document.getElementById('hmBrowserSearchBtn');
+    if(btn)btn.onclick=()=>hmLaunchBrowserSearch();
   }
 
-  setTimeout(()=>{
-    location.href='https://www.google.com/search?q='+encodeURIComponent(q);
-  },450);
+  // Masaüstü ve çoğu mobil tarayıcıda otomatik yeni sekme denemesi.
+  // iOS PWA bunu engellerse yukarıdaki kullanıcı tıklamalı düğme her zaman hazır kalır.
+  setTimeout(()=>hmLaunchBrowserSearch(),250);
 }
 
 function hmRecipeFailureVisible(){
@@ -68,9 +78,8 @@ function hmRecipeFailureVisible(){
 const hmGenerateV018=window.generateRecipe;
 window.generateRecipe=async function(retry=false){
   await hmGenerateV018(retry);
-  // Ücretsiz canlı kaynak + yerel yedek zinciri sonuç vermezse tarayıcıya geç.
   if(hmRecipeFailureVisible())hmOpenBrowserSearch();
 };
 
 const v018Version=document.querySelector('.brand>.mini');
-if(v018Version)v018Version.textContent='beta • v0.18';
+if(v018Version)v018Version.textContent='beta • v0.19';
