@@ -23,6 +23,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Cache Hugging Face dataset
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: handemade-hf-turkish-recipes-175k-v1
+      - name: Install catalog builder
+        run: pip install --disable-pip-version-check -q 'datasets>=3.0,<5'
+      - name: Build world cuisine catalogs
+        run: python scripts/build_cuisine_catalogs.py
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
