@@ -1,8 +1,8 @@
-const CACHE='handemade-v031';
+const CACHE='handemade-v032';
 const ASSETS=[
   './','./index.html','./app.css','./app.js','./cuisine.js',
   './v011.js','./v012.js','./v013.js','./v014.js','./v015.js','./v016.js','./v017.js',
-  './engine-v030.js','./engine-v030-tune.js','./source-turkish-v031.js',
+  './engine-v030.js','./engine-v030-tune.js','./source-turkish-v031.js','./v032.js',
   './manifest.webmanifest','./handemade-logo.webp','./handemade-bg.webp','./apple-touch-icon.png'
 ];
 
